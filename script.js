@@ -110,9 +110,22 @@ function buildLevel() {
   // create platforms, monsters, and any other game objects
   // best method is to draw sprites from left to right on the screen
   createPlatform(50, 690, 5);
+  createPlatform(850, 645, 3);
+  createPlatform(1450, 595, 4);
+  createPlatform(2050, 480, 2.5);
+  createPlatform(2500, 350, 2);
+  createPlatform(2500, 670, 3);
+  createPlatform(3000, 480, 2);
   createCollectable(300, 340);
+  createCollectable(1085, 320);
+  createCollectable(1600, 320);
   createMonster(500, 600, 0);
+  createMonster(1085, 530, 0);
+  createMonster(1730, 470, 0);
+  createMonster(1860, 470, 0);
   createMonster(500, 600, -1);
+  createMonster(2290, 290, 0);
+  createMonster(2800, 300, 0);
 }
 
 // Creates a player sprite and adds animations and a collider to it
@@ -143,6 +156,7 @@ function createPlatform(x, y, len) {
       var middle = createSprite(x + (128 * i), y, 0, 0);
       middle.addToGroup(platforms);
       middle.addImage(platformImageMiddle);
+
       //middle.debug = true;
     }
   }
@@ -202,6 +216,7 @@ function checkCollisions() {
     player.collide(platforms, platformCollision);
     player.collide(monsters, playerMonsterCollision);
     monsters.collide(platforms, platformCollision);
+    player.overlap(collectables, getCollectable);
 }
 
 // Callback function that runs when the player or a monster collides with a
@@ -223,7 +238,7 @@ function platformCollision(sprite, platform) {
 // Callback function that runs when the player collides with a monster.
 function playerMonsterCollision(player, monster) {
   if(player.touching.bottom) {
-    monster.remove();
+ monster.remove();
 
 var defeatedMonster = createSprite(monster.position.x, monster.position.y, 0, 0);
 defeatedMonster.addImage(monsterDefeatImage);
@@ -244,13 +259,14 @@ score++;
 
 // Callback function that runs when the player overlaps with a collectable.
 function getCollectable(player, collectable) {
-
-}
+ collectable.remove();
+ player.score++;
+  }
 
 // Updates the player's position and current animation by calling
 // all of the relevant "check" functions below.
 function updatePlayer() {
-  //console.log("Player x: " + player.position.x + " Player y: " + player.position.y);
+  console.log("Player x: " + player.position.x + " Player y: " + player.position.y);
   checkIdle();
   checkFalling();
   checkJumping();
@@ -360,7 +376,11 @@ function updateDisplay() {
 
   // turn camera back on
   camera.on();
+  camera.position.x = player.position.x;
 
+  for(var i = 0; i < collectables.length; i++) {
+    collectables[i].rotation += 5;
+  }
 }
 
 // Called when the player has won the game (e.g., reached the goal at the end).
