@@ -115,10 +115,13 @@ function buildLevel() {
   createPlatform(2050, 480, 2.5);
   createPlatform(2500, 350, 2);
   createPlatform(2500, 670, 3);
-  createPlatform(3000, 480, 2);
+  createPlatform(3000, 525, 2);
   createCollectable(300, 340);
+  createCollectable(745, 430);
   createCollectable(1085, 320);
+  createCollectable(1232, 430);
   createCollectable(1600, 320);
+  createCollectable(1756, 389);
   createMonster(500, 600, 0);
   createMonster(1085, 530, 0);
   createMonster(1730, 470, 0);
@@ -126,6 +129,9 @@ function buildLevel() {
   createMonster(500, 600, -1);
   createMonster(2290, 290, 0);
   createMonster(2800, 300, 0);
+  goal = createSprite(3100, 415);
+  goal.addImage(goalImage);
+
 }
 
 // Creates a player sprite and adds animations and a collider to it
@@ -217,6 +223,7 @@ function checkCollisions() {
     player.collide(monsters, playerMonsterCollision);
     monsters.collide(platforms, platformCollision);
     player.overlap(collectables, getCollectable);
+    player.overlap(goal, executeWin);
 }
 
 // Callback function that runs when the player or a monster collides with a
@@ -387,6 +394,8 @@ function updateDisplay() {
 // Anything can happen here, but the most important thing is that we call resetGame()
 // after a short delay.
 function executeWin() {
+  noLoop();
+  setTimeout(resetGame, 1000);
 
 }
 
